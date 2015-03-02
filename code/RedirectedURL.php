@@ -14,6 +14,7 @@ class RedirectedURL extends DataObject implements PermissionProvider {
 		'FromBase' => 'Varchar(255)',
 		'FromQuerystring' => 'Varchar(255)',
 		'To' => 'Varchar(255)',
+		'ExpiryDate' => 'Date',
 	);
 
 	private static $indexes = array(
@@ -27,25 +28,30 @@ class RedirectedURL extends DataObject implements PermissionProvider {
 		'FromBase' => 'From URL base',
 		'FromQuerystring' => 'From URL query parameters',
 		'To' => 'To URL',
+		'ExpiryDate' => 'ExpiryDate',
 	);
 
 	private static $searchable_fields = array(
 		'FromBase',
 		'FromQuerystring',
 		'To',
+		'ExpiryDate',
 	);
 
 	public function getCMSFields() {
 		$fields = parent::getCMSFields();
 
 		$fromBaseField = $fields->fieldByName('Root.Main.FromBase');
-		$fromBaseField->setDescription('e.g. /about-us.html');
+		$fromBaseField->setDescription('examples: /about-us.html     /about/*');
 
 		$fromQueryStringField = $fields->fieldByName('Root.Main.FromQuerystring');
 		$fromQueryStringField->setDescription('e.g. page=1&num=5');
 
 		$toField = $fields->fieldByName('Root.Main.To');
 		$toField->setDescription('e.g. /about?something=5');
+
+		$expiryDateField = $fields->fieldByName('Root.Main.ExpiryDate');
+		$expiryDateField->setConfig('showcalendar',true);
 
 		return $fields;
 	}

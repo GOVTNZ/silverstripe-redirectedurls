@@ -59,3 +59,27 @@ CSV Importer, example file format:
 	/example/no-querystring.html, ,/example/no-querystring/
 	/example/two-queryparams.html, foo=1&bar=2, /example/foo/1/bar/2
 	/about/*, ,/about-us
+
+Expiry
+------
+You can optionally provide an expiry date for redirect rules. This allows you set up a transition period after a content restructure, for example.
+
+The build task RedirectedURLExpiryTask can be executed to delete redirects n a have an expiry date that is in the past. If you want this to be executed periodically, it needs to be set up to execute as a cron job. Alternately, this can be executed directly by an administrator.
+
+Editing Rules that Target a Page
+--------------------------------
+On sites where there are many redirect rules, it can be easier to manage the redirect rules on the pages that the rules target. By default this feature is
+disabled. To enable it, simply add RedirectedURLPageExtension as an extension to Page. For example, in your site's config.yml:
+
+    Page:
+      extensions:
+        - RedirectedURLPageExtension
+
+This will add a tab "Redirections" to each page. This will list all redirection rules where the "To" field matches this page, as follows:
+
+ *  The To field should be a relative URL. It may or may not have leading
+    or trailing slashes. Home is "/". A URL containing "://" will not match.
+ *  If the To field contains query fields or fragments, these are ignored
+    for the matching.
+
+Permissions work the same; the user must have the appropriate permisssions (for maintaining RedirectedURL objects) to edit the rules. It is the same underlying data, only filtered.

@@ -55,6 +55,19 @@ class RedirectedURLPageExtension extends DataExtension {
 	public function isRedirectToSelf($r) {
 		$thisLink = $this->owner->Link();
 
+		// we need to consider base URL as well, which may be present on the start of $thisLink. If
+		// it does, remove it before comparing, but leaving leading and trailing slash.
+		$base = Director::baseURL();
+		if (strlen($base) > 1) {
+			if (substr($base, -1) == '/') {
+				$base = substr($base, 0, strlen($base) - 1); // drop trailing slash
+			}
+			if (substr($thisLink, 0, strlen($base)) == $base) {
+				// base is a prefix on thisLink, so remove it for the comparison
+				$thisLink = substr($thisLink, strlen($base));
+			}
+		}
+
 		// ignore full links
 		if (strpos($r, '://') !== FALSE) {
 			return false;

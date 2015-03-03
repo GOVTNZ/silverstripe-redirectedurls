@@ -50,4 +50,25 @@ class RedirectedURLHandlerTest extends FunctionalTest {
 			$arrayToLowercaseMethod->invoke($cont, $array)
 		);
 	}
+
+	function testRuleToPageMatching() {
+		$page = new RedirectedURL_TestPage();
+		$page->URLSegment = "test-url";
+
+		$this->assertEquals($page->isRedirectToSelf("other-url"), false);
+		$this->assertEquals($page->isRedirectToSelf("http://test-url"), false);
+		$this->assertEquals($page->isRedirectToSelf("test-url"), true);
+		$this->assertEquals($page->isRedirectToSelf("/test-url"), true);
+		$this->assertEquals($page->isRedirectToSelf("test-url/"), true);
+		$this->assertEquals($page->isRedirectToSelf("/test-url/"), true);
+		$this->assertEquals($page->isRedirectToSelf("/test-url?foo=bar"), true);
+		$this->assertEquals($page->isRedirectToSelf("test-url?foo=bar#frag"), true);
+		$this->assertEquals($page->isRedirectToSelf("test-url#frag"), true);
+	}
+}
+
+class RedirectedURL_TestPage extends Page implements TestOnly {
+	private static $extensions = array(
+		'RedirectedURLPageExtension'
+	);
 }

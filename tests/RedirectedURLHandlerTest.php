@@ -55,15 +55,18 @@ class RedirectedURLHandlerTest extends FunctionalTest {
 		$page = new RedirectedURL_TestPage();
 		$page->URLSegment = "test-url";
 
-		$this->assertEquals($page->isRedirectToSelf("other-url"), false);
-		$this->assertEquals($page->isRedirectToSelf("http://test-url"), false);
-		$this->assertEquals($page->isRedirectToSelf("test-url"), true);
-		$this->assertEquals($page->isRedirectToSelf("/test-url"), true);
-		$this->assertEquals($page->isRedirectToSelf("test-url/"), true);
-		$this->assertEquals($page->isRedirectToSelf("/test-url/"), true);
-		$this->assertEquals($page->isRedirectToSelf("/test-url?foo=bar"), true);
-		$this->assertEquals($page->isRedirectToSelf("test-url?foo=bar#frag"), true);
-		$this->assertEquals($page->isRedirectToSelf("test-url#frag"), true);
+		Debug::show($page->Link());
+		Debug::show("base:" . Director::baseURL());
+
+		$this->assertFalse($page->isRedirectToSelf("other-url"), "relative URL to somewhere else");
+		$this->assertFalse($page->isRedirectToSelf("http://test-url"), "absolute URL");
+		$this->assertTrue($page->isRedirectToSelf("test-url"), "no slash");
+		$this->assertTrue($page->isRedirectToSelf("/test-url"), "front slash");
+		$this->assertTrue($page->isRedirectToSelf("test-url/"), "trail slash");
+		$this->assertTrue($page->isRedirectToSelf("/test-url/"), "both slash");
+		$this->assertTrue($page->isRedirectToSelf("/test-url?foo=bar"), "with query");
+		$this->assertTrue($page->isRedirectToSelf("test-url?foo=bar#frag"), "with query and frag");
+		$this->assertTrue($page->isRedirectToSelf("test-url#frag"), "with frag");
 	}
 }
 
